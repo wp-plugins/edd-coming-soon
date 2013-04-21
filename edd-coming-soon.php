@@ -31,9 +31,6 @@ function edd_cs_render_option( $post_id ) {
 
 	?>
 	<p>
-		<strong><?php echo apply_filters( 'edd_cs_heading', __( 'Coming Soon:', 'edd-cs' ) ); ?></strong>
-	</p>
-	<p>
 		<label for="edd_coming_soon">
 			<input type="checkbox" name="edd_coming_soon" id="edd_coming_soon" value="1" <?php checked( 1, $coming_soon ); ?> />
 			<?php echo apply_filters( 'edd_cs_toggle_text', __( 'Enable coming soon download', 'edd-cs' ) ); ?>
