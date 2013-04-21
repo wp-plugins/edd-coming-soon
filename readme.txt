@@ -19,6 +19,16 @@ This plugin requires [Easy Digital Downloads](http://wordpress.org/extend/plugin
 1. Displays “Coming soon” instead of the price when using the [downloads] shortcode, and anywhere else where the edd_price() function has been called.
 1. Prevents the coming soon download from being purchased. The plugin will remove the purchase button and stop the download from being added to cart via the edd_action. Eg ?edd_action=add_to_cart&download_id=XXX
 
+= Filtering the coming soon text =    
+
+Paste this into your functions.php and modify the text below:
+
+    function themename_coming_soon_text() { 
+	    return 'Available Soon';
+    }
+    add_filter( 'edd_cs_coming_soon_text', 'themename_coming_soon_text' );
+
+
 == Installation ==
 
 1. Upload entire `edd-coming soon` folder to the `/wp-content/plugins/` directory, or just upload the ZIP package via 'Plugins > Add New > Upload' in your WP Admin
@@ -27,7 +37,7 @@ This plugin requires [Easy Digital Downloads](http://wordpress.org/extend/plugin
 
 == Screenshots ==
 
-1. 
+1. Download Configuration metabox with new coming soon checkbox option
 
 == Changelog ==
 
