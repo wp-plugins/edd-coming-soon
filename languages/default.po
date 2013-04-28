@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: EDD Coming Soon\n"
-"POT-Creation-Date: 2013-04-20 11:12+1200\n"
-"PO-Revision-Date: 2013-04-20 11:12+1200\n"
+"POT-Creation-Date: 2013-04-22 00:14+1200\n"
+"PO-Revision-Date: 2013-04-22 11:40+1200\n"
 "Last-Translator: \n"
 "Language-Team: Sumobi <andrew@sumobi.com>\n"
 "MIME-Version: 1.0\n"
@@ -23,4 +23,8 @@ msgstr ""
 
 #: ../edd-coming-soon.php:98
 msgid "Coming Soon"
+msgstr ""
+
+#: ../edd-coming-soon.php:133
+msgid "Coming Soon products can't be purchased"
 msgstr ""
