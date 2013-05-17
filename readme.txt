@@ -20,6 +20,19 @@ This plugin requires [Easy Digital Downloads](http://wordpress.org/extend/plugin
 1. Displays "Coming Soon" or the Custom Status text instead of the price when using the [downloads] shortcode, and anywhere else where the edd_price() function has been called.
 1. Prevents the coming soon download from being purchased. The plugin will remove the purchase button and stop the download from being added to cart via the edd_action. Eg ?edd_action=add_to_cart&download_id=XXX
 
+**Looking for a free theme for Easy Digital Downloads?**
+
+[http://sumobi.com/shop/shop-front/](http://sumobi.com/shop/shop-front/ "Shop Front")
+
+Shop Front was designed to be simple, responsive and lightweight. It has only the bare essentials, making it the perfect starting point for your next digital e-commerce store. It’s also easily extensible with a growing collection of add-ons to enhance the functionality and styling.
+
+**Stay up to date**
+
+*Become a fan on Facebook* 
+[http://www.facebook.com/pages/Sumobi/411698702220075](http://www.facebook.com/pages/Sumobi/411698702220075 "Facebook")
+
+*Follow me on Twitter* 
+[http://twitter.com/sumobi_](http://twitter.com/sumobi_ "Twitter")
 
 == Installation ==
 
