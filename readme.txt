@@ -24,7 +24,7 @@ This plugin requires [Easy Digital Downloads](http://wordpress.org/extend/plugin
 
 [http://sumobi.com/shop/shop-front/](http://sumobi.com/shop/shop-front/ "Shop Front")
 
-Shop Front was designed to be simple, responsive and lightweight. It has only the bare essentials, making it the perfect starting point for your next digital e-commerce store. It’s also easily extensible with a growing collection of add-ons to enhance the functionality and styling.
+Shop Front was designed to be simple, responsive and lightweight. It has only the bare essentials, making it the perfect starting point for your next digital e-commerce store. It’s also easily extensible with a growing collection of add-ons to enhance the functionality & styling.
 
 **Stay up to date**
 
