@@ -92,11 +92,11 @@ Mark downloads as "Coming Soon" from the download configuration metabox. Optiona
 
 = I'm not seeing the "Coming Soon" text on my download grid =
 
-Using the download shortcode should be fine but some themes may have coded their own custom solution of displaying the downloads in which case you may not see your custom text. If this is the case, you'll need to edit the code to make this happen. Try switching to the default WordPress theme to see if you can see the text.
+Some themes may have coded their own custom solution for displaying the downloads. Try switching to the default WordPress theme to see if you can see the text.
 
-= I'm still seeing a price on my single download page, Shouldn't the price be hidden? =
+= I'm still seeing a price on my single download page =
 
-It depends on how your theme displays the price on your single download page. If your theme uses the default EDD purchase form then this will be removed. Some themes might have their own function for displaying the price so you'll need to edit your theme to remove it. You can use the following condition to wrap blocks of code that shouldn't be displayed such as the price:
+It depends on how your theme displays the price on your single download page. If your theme uses the default EDD purchase form then this will be removed fine. However some themes might have their own function for displaying the price so you'll need to edit your theme to remove it. You can use the following condition to wrap blocks of code that shouldn't be displayed such as the price:
 
     <?php if ( ! edd_coming_soon_is_active() ) : ?>
          // the code you don't want to show when a download is set to coming soon
@@ -111,8 +111,13 @@ Add the following to your functions.php
 
 == Screenshots ==
 
-1. Download Configuration metabox with new coming soon checkbox option
+1. Easy Digital Download's download configuration metabox with the new coming soon option
 
+1. The coming soon text is displayed underneath the price on the admin pricing columns 
+
+1. The download's price is removed from the standard download grid, and the coming soon text is shown
+
+1. The download's coming soon text is shown after the content on the single download page. This can be removed
 
 == Changelog ==
 
