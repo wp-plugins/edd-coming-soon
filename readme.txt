@@ -3,8 +3,8 @@ Contributors: sumobi, sc0ttkclark, julien731
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EFUPMPEZPGW7L
 Tags: easy digital downloads, digital downloads, e-downloads, edd, coming soon, sumobi
 Requires at least: 3.3
-Tested up to: 3.9.2
-Stable tag: 1.3
+Tested up to: 4.2
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -105,12 +105,14 @@ Add the following to your functions.php
 
 1. The download's coming soon text is shown after the content on the single download page. This can be removed
 
-== Upgrade Notice ==
-
-= 1.3 =
-* New: Voting feature. Users can now express their interest in downloads that are marked as coming soon.
-
 == Changelog ==
+
+= 1.3.1 =
+* New: edd_coming_soon_voting_enabled() function to check whether a download has voting enabled
+* New: edd_coming_soon_get_votes() function to get the total votes for a download
+* New: French translation, props fxbenard
+* Tweak: Creates the "_edd_coming_soon_votes" meta key on save if voting is enabled for a download and it hasn't received any votes
+
 
 = 1.3 =
 * Fix: Moved the plugin's options to the "download settings" metabox

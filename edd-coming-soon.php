@@ -3,17 +3,20 @@
 Plugin Name: EDD Coming Soon
 Plugin URI: http://sumobi.com/shop/edd-coming-soon/
 Description: Allows "custom status" downloads (not available for purchase) and allows voting on these downloads in Easy Digital Downloads
-Version: 1.3
+Version: 1.3.1
 Author: Andrew Munro, Sumobi
 Author URI: http://sumobi.com/
 Contributors: sc0ttkclark, julien731
 License: GPL-2.0+
 License URI: http://www.opensource.org/licenses/gpl-license.php
+
+Text Domain: edd-coming-soon
+Domain Path: languages
 */
 
 // Plugin constants
 if ( ! defined( 'EDD_COMING_SOON' ) )
-	define( 'EDD_COMING_SOON', '1.3' );
+	define( 'EDD_COMING_SOON', '1.3.1' );
 
 if ( ! defined( 'EDD_COMING_SOON_URL' ) )
 	define( 'EDD_COMING_SOON_URL', plugin_dir_url( __FILE__ ) );
@@ -101,7 +104,7 @@ function edd_coming_soon_render_option( $post_id ) {
 				<?php printf( __( 'Enable voting in the %s shortcode', 'edd-coming-soon' ), '[downloads]' ); ?>
 			</label>
 		</p>
-		
+
 		<p><strong><?php _e( 'Votes', 'edd-coming-soon' ); ?></strong></p>
 		<p><?php printf( __( '%s people want this %s', 'edd-coming-soon' ), "<strong>$count</strong>", edd_get_label_singular( true ) ); ?></p>
 	</div>
@@ -138,7 +141,15 @@ add_filter( 'edd_metabox_fields_save', 'edd_coming_soon_metabox_fields_save' );
  * @since 1.2
  */
 function edd_coming_soon_admin_price_column( $price, $download_id ) {
+	$cs_active = get_post_meta($download_id, 'edd_coming_soon' );
+	$votesenabled = get_post_meta($download_id, 'edd_cs_vote_enable' );
+	$votes_sc_enabled = get_post_meta($download_id, 'edd_cs_vote_enable_sc' );
+	$votes = get_post_meta($download_id, '_edd_coming_soon_votes');
 	$price .= '<br />' . edd_coming_soon_get_custom_status_text();
+
+	if ( $cs_active[0] == 1 && ( $votesenabled[0] == 1 || $votes_sc_enabled[0] == 1 ) ) {
+		$price .= '<br /><strong>' . __( 'Votes: ', 'edd-coming-soon' ) . $votes[0] . '</strong>';
+	}
 
 	return $price;
 }
@@ -318,6 +329,67 @@ function edd_coming_soon_increment_votes() {
 add_action( 'init', 'edd_coming_soon_increment_votes' );
 
 /**
+ * Save downloads with _edd_coming_soon_votes meta key set to 0
+ *
+ * @since   1.3.1
+ * @return  
+ */
+function edd_coming_soon_save_download( $post_id, $post ) {
+
+	$count = edd_coming_soon_get_votes( $post_id );
+
+	// update count on save if no count currently exists
+	if ( edd_coming_soon_voting_enabled( $post_id ) && ! $count ) {
+		update_post_meta( $post_id, '_edd_coming_soon_votes', 0 );
+	}
+
+}
+add_action( 'edd_save_download', 'edd_coming_soon_save_download', 10, 2 );
+
+/**
+ * Check if a download has voting enabled
+ *
+ * @since   1.3.1
+ * @return  boolean
+ */
+function edd_coming_soon_voting_enabled( $download_id = 0 ) {
+
+	if ( ! $download_id ) {
+		return;
+	}
+
+	$voting_enabled = get_post_meta( $download_id , 'edd_cs_vote_enable', true );
+
+	if ( $voting_enabled ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Get a download's total votes
+ *
+ * @since   1.3.1
+ * @return  int $count, 0 otherwise
+ */
+function edd_coming_soon_get_votes( $download_id = 0 ) {
+	
+	if ( ! $download_id ) {
+		return;
+	}
+
+	$count = get_post_meta( $download_id , '_edd_coming_soon_votes', true );
+
+	if ( $count ) {
+		return $count;
+	}
+
+	return 0;
+
+}
+
+/**
  * Get the voting form.
  *
  * The form will record a new vote for the current product. It is used
@@ -360,12 +432,12 @@ function edd_coming_soon_get_vote_form( $atts = array() ) {
 
 	<?php if ( $voted ) : ?>
 
-		<p id="edd-cs-voted" class="edd-cs-voted"><?php printf( __( 'We heard you! Your interest for this %s was duly noted.', 'edd-coming-soon' ), edd_get_label_singular( true ) ); ?></p>
+		<p id="edd-cs-voted" class="edd-cs-voted"><?php printf( __( apply_filters( 'edd_coming_soon_voted_message', 'We heard you! Your interest for this %s was duly noted.', 'edd-coming-soon' ), edd_get_label_singular( true )) ); ?></p>
 
 	<?php else : ?>
 
 		<form role="form" method="post" action="<?php echo get_permalink( $post->ID ); ?>" class="edd-coming-soon-vote-form">
-			
+
 			<?php if ( 'no' != $description ) : ?>
 				<p class="edd-cs-vote-description"><?php echo $vote_description; ?></p>
 			<?php endif; ?>
@@ -404,7 +476,7 @@ add_shortcode( 'edd_cs_vote', 'edd_coming_soon_get_vote_form' );
  * Displays the total number of votes for each
  * "coming soon" product.
  *
- * @since  1.3.0 
+ * @since  1.3.0
  * @return void
  */
 function edd_coming_soon_votes_widget() {
@@ -425,9 +497,9 @@ function edd_coming_soon_votes_widget() {
 				'type'    => 'CHAR',
 				'compare' => '='
 			)
-		)	
+		)
 	);
-	
+
 	$query = new WP_Query( $args );
 
 	if ( ! empty( $query->posts ) ) {
@@ -472,6 +544,11 @@ function edd_coming_soon_votes_widget() {
  * @since  1.3.0
  */
 function edd_coming_soon_votes_add_widget() {
+
+	if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
+		return;
+	}
+	
 	wp_add_dashboard_widget( 'edd_coming_soon_votes_widget', sprintf( __( 'Most Wanted Coming Soon %s', 'edd-coming-soon' ), edd_get_label_plural() ), 'edd_coming_soon_votes_widget' );
 }
 add_action( 'wp_dashboard_setup', 'edd_coming_soon_votes_add_widget' );
