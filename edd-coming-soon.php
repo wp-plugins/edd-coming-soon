@@ -3,7 +3,7 @@
 Plugin Name: EDD Coming Soon
 Plugin URI: http://sumobi.com/shop/edd-coming-soon/
 Description: Allows "custom status" downloads (not available for purchase) and allows voting on these downloads in Easy Digital Downloads
-Version: 1.3.1
+Version: 1.3.2
 Author: Andrew Munro, Sumobi
 Author URI: http://sumobi.com/
 Contributors: sc0ttkclark, julien731
@@ -16,7 +16,7 @@ Domain Path: languages
 
 // Plugin constants
 if ( ! defined( 'EDD_COMING_SOON' ) )
-	define( 'EDD_COMING_SOON', '1.3.1' );
+	define( 'EDD_COMING_SOON', '1.3.2' );
 
 if ( ! defined( 'EDD_COMING_SOON_URL' ) )
 	define( 'EDD_COMING_SOON_URL', plugin_dir_url( __FILE__ ) );
@@ -141,14 +141,23 @@ add_filter( 'edd_metabox_fields_save', 'edd_coming_soon_metabox_fields_save' );
  * @since 1.2
  */
 function edd_coming_soon_admin_price_column( $price, $download_id ) {
-	$cs_active = get_post_meta($download_id, 'edd_coming_soon' );
-	$votesenabled = get_post_meta($download_id, 'edd_cs_vote_enable' );
-	$votes_sc_enabled = get_post_meta($download_id, 'edd_cs_vote_enable_sc' );
-	$votes = get_post_meta($download_id, '_edd_coming_soon_votes');
+
+	// is coming soon download
+	$cs_active = edd_coming_soon_is_active( $download_id );
+	
+	// voting enabled
+	$votes_enabled = edd_coming_soon_voting_enabled( $download_id );
+
+	// voting enabled in shortcode
+	$votes_sc_enabled = (boolean) get_post_meta( $download_id, 'edd_cs_vote_enable_sc', true );
+
+	// votes
+	$votes = get_post_meta( $download_id, '_edd_coming_soon_votes', true );
+	
 	$price .= '<br />' . edd_coming_soon_get_custom_status_text();
 
-	if ( $cs_active[0] == 1 && ( $votesenabled[0] == 1 || $votes_sc_enabled[0] == 1 ) ) {
-		$price .= '<br /><strong>' . __( 'Votes: ', 'edd-coming-soon' ) . $votes[0] . '</strong>';
+	if ( $cs_active && ( $votes_enabled || $votes_sc_enabled ) ) {	
+		$price .= '<br /><strong>' . __( 'Votes: ', 'edd-coming-soon' ) . $votes . '</strong>';
 	}
 
 	return $price;
@@ -426,13 +435,14 @@ function edd_coming_soon_get_vote_form( $atts = array() ) {
 	$voted            = isset( $_COOKIE['edd_cs_vote_' . $pid] ) ? true : false;
 	$vote_description = apply_filters( 'edd_cs_vote_description', __( 'Let us know you\'re interested by voting below.', 'edd-coming-soon' ) );
 	$submission       = apply_filters( 'edd_cs_vote_submission', __( 'I want this', 'edd-coming-soon' ) );
+	$vote_message     = apply_filters( 'edd_coming_soon_voted_message', sprintf( __( 'We heard you! Your interest for this %s was duly noted.', 'edd-coming-soon' ), edd_get_label_singular( true ) ) );
 
 	ob_start();
 	?>
 
 	<?php if ( $voted ) : ?>
 
-		<p id="edd-cs-voted" class="edd-cs-voted"><?php printf( __( apply_filters( 'edd_coming_soon_voted_message', 'We heard you! Your interest for this %s was duly noted.', 'edd-coming-soon' ), edd_get_label_singular( true )) ); ?></p>
+		<p id="edd-cs-voted" class="edd-cs-voted"><?php echo $vote_message; ?></p>
 
 	<?php else : ?>
 
